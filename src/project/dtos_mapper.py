@@ -8,7 +8,7 @@ from datetime import datetime
 
 class ProjectCreateDto(Schema):
     name = fields.String(required=True)
-    description = fields.String(default='It doesnt have description yet')
+    description = fields.String(dump_default='It doesnt have description yet')
     start_date = fields.DateTime(required=True)
     end_date = fields.DateTime(required=True)
     main_user_id = fields.Integer(required=True)
@@ -22,12 +22,12 @@ class ProjectCreateDto(Schema):
 
 
 class ProjectUpdateDto(Schema):
-    name = fields.String(default=None)
-    description = fields.String(default=None)
-    start_date = fields.DateTime(default=None)
-    end_date = fields.DateTime(default=None)
-    main_user_id = fields.Integer(default=None)
-    institution_id = fields.Integer(default=None)
+    name = fields.String(dump_default=None)
+    description = fields.String(dump_default=None)
+    start_date = fields.DateTime(dump_default=None)
+    end_date = fields.DateTime(dump_default=None)
+    main_user_id = fields.Integer(dump_default=None)
+    institution_id = fields.Integer(dump_default=None)
 
     @validates_schema
     def validate_end_date(self, data, **kwargs):
@@ -104,7 +104,7 @@ class ProjectMapper:
         except ValidationError as err:
             raise InputValidationError(err.messages)
 
-        # set default data and database-friendly format
+        # set dump_default data and database-friendly format
         return schema.dump(body)
 
     def body_to_update_dto(self, body) -> ProjectUpdateDto:
@@ -116,5 +116,5 @@ class ProjectMapper:
         except ValidationError as err:
             raise InputValidationError(err.messages)
 
-        # set default data and database-friendly format
+        # set dump_default data and database-friendly format
         return schema.dump(body)

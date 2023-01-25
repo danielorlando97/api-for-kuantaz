@@ -5,14 +5,14 @@ from src.core.api_errors import InputValidationError
 
 class InstitutionCreateDto(Schema):
     name = fields.String(required=True)
-    description = fields.String()
-    direction = fields.String()
+    description = fields.String(dump_default=None)
+    direction = fields.String(dump_default=None)
 
 
 class InstitutionUpdateDto(Schema):
-    name = fields.String(default=None)
-    description = fields.String(default=None)
-    direction = fields.String(default=None)
+    name = fields.String(dump_default=None)
+    description = fields.String(dump_default=None)
+    direction = fields.String(dump_default=None)
 
 
 class InstitutionProjectUserReadDto(Schema):
@@ -43,8 +43,10 @@ class InstitutionProjectReadDto(Schema):
 class InstitutionReadDto(Schema):
     id = fields.Integer()
     name = fields.String()
-    description = fields.String(dump_default="It doesnt have description yet")
-    direction = fields.String(dump_default="It doesnt have description yet")
+    description = fields.Function(
+        lambda obj: "It doesnt have description yet" if obj.description is None else obj.description)
+    direction = fields.Function(
+        lambda obj: "It doesnt have description yet" if obj.description is None else obj.direction)
     created_at = fields.DateTime()
     updated_at = fields.DateTime()
 
@@ -81,7 +83,7 @@ class InstitutionMapper:
         except ValidationError as err:
             raise InputValidationError(err.messages)
 
-        # set default data and database-friendly format
+        # set dump_default data and database-friendly format
         return schema.dump(body)
 
     def body_to_update_dto(self, body) -> InstitutionUpdateDto:
@@ -93,5 +95,5 @@ class InstitutionMapper:
         except ValidationError as err:
             raise InputValidationError(err.messages)
 
-        # set default data and database-friendly format
+        # set dump_default data and database-friendly format
         return schema.dump(body)

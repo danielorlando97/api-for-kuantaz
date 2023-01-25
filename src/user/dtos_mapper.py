@@ -13,11 +13,11 @@ class UserCreateDto(Schema):
 
 
 class UserUpdateDto(Schema):
-    name = fields.String(default=None)
-    last_name = fields.String(default=None)
-    rut = fields.String(default=None)
-    birthday = fields.String(default=None)
-    office = fields.String(default=None)
+    name = fields.String(dump_default=None)
+    last_name = fields.String(dump_default=None)
+    rut = fields.String(dump_default=None)
+    birthday = fields.String(dump_default=None)
+    office = fields.String(dump_default=None)
 
 
 class UserProjectReadDto(Schema):
@@ -71,7 +71,7 @@ class UserMapper:
         except ValidationError as err:
             raise InputValidationError(err.messages)
 
-        # set default data and database-friendly format
+        # set dump_default data and database-friendly format
         return schema.dump(body)
 
     def body_to_update_dto(self, body) -> UserUpdateDto:
@@ -83,5 +83,5 @@ class UserMapper:
         except ValidationError as err:
             raise InputValidationError(err.messages)
 
-        # set default data and database-friendly format
+        # set dump_default data and database-friendly format
         return schema.dump(body)
