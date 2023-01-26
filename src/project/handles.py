@@ -2,7 +2,7 @@ from src import app
 from .service import ProjectService
 from .dtos_mapper import ProjectMapper
 from flask import request, Flask, jsonify
-from src.core.api_errors import InputValidationError, ApplicationValidationError
+from src.core.api_errors import ApplicationInconsistencyError, InputValidationError, ApplicationValidationError
 
 
 def build(app: Flask, service: ProjectService, mapper: ProjectMapper):
@@ -84,6 +84,8 @@ def build(app: Flask, service: ProjectService, mapper: ProjectMapper):
                 entity = service.create(body)
             except InputValidationError as e:
                 return jsonify(e.message), 400
+            except ApplicationInconsistencyError as e:
+                return e.message, 404
 
             return {"message": "success", 'entity_id': entity.id}
         else:
@@ -91,7 +93,10 @@ def build(app: Flask, service: ProjectService, mapper: ProjectMapper):
 
     @app.route('/project/<_id>', methods=['GET'])
     def project_get_id(_id):
-        entity = service.get_by_id(_id)
+        try:
+            entity = service.get_by_id(_id)
+        except ApplicationInconsistencyError as e:
+            return e.message, 404
         return {"message": "success", "entity": mapper.entity_to_details(entity)}
 
     @app.route('/project/<_id>', methods=['PUT'])
@@ -151,6 +156,9 @@ def build(app: Flask, service: ProjectService, mapper: ProjectMapper):
                 return jsonify(e.message), 400
             except ApplicationValidationError as e:
                 return e.message, 400
+            except ApplicationInconsistencyError as e:
+                return e.message, 404
+
             return {"message": "success"}
         else:
             return "The request payload is not in JSON format", 400

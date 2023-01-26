@@ -2,7 +2,7 @@ from src import app
 from .service import InstitutionService
 from .dtos_mapper import InstitutionMapper
 from flask import request, Flask, jsonify
-from src.core.api_errors import InputValidationError
+from src.core.api_errors import ApplicationInconsistencyError, InputValidationError
 
 
 def build(app: Flask, service: InstitutionService, mapper: InstitutionMapper):
@@ -241,8 +241,10 @@ def build(app: Flask, service: InstitutionService, mapper: InstitutionMapper):
                     entity:
                         $ref: '#/definitions/InstitutionReadDto'
         """
-
-        entity = service.get_by_id(_id)
+        try:
+            entity = service.get_by_id(_id)
+        except ApplicationInconsistencyError as e:
+            return e.message, 404
         return {"message": "success", "entity": mapper.entity_to_details(entity)}
 
     @app.route('/institution/<_id>', methods=['PUT'])

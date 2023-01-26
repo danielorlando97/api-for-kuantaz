@@ -6,9 +6,15 @@ from . import institution as inst
 from . import project
 from . import user
 
-inst.build(app, inst.InstitutionService(db), inst.InstitutionMapper())
-project.build(app, project.ProjectService(db), project.ProjectMapper())
-user.build(app, user.UserService(db), user.UserMapper())
+
+inst_service = inst.InstitutionService(db)
+inst.build(app, inst_service, inst.InstitutionMapper())
+
+user_service = user.UserService(db)
+user.build(app, user_service, user.UserMapper())
+
+project.build(app, project.ProjectService(
+    db, user_service, inst_service), project.ProjectMapper())
 
 
 swagger = Swagger(app)
@@ -35,7 +41,7 @@ app.run(debug=True)
 #   https://flask-restplus.readthedocs.io/en/stable/quickstart.html
 #   https://github.com/flasgger/flasgger
 #   https://medium.com/analytics-vidhya/flasgger-an-api-playground-with-flask-and-swagger-ui-6b6806cf8884
-# TODO: Add UnitTest
+# TODO: Add UnitTest ✅✅
 #   https://testdriven.io/blog/flask-pytest/
 #   https://flask.palletsprojects.com/en/2.2.x/testing/
 # TODO: Docker and Env
@@ -44,3 +50,4 @@ app.run(debug=True)
 #   python-version
 #   401 para los proyectos
 #   sagger project
+#   test project

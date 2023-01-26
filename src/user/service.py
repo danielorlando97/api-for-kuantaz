@@ -1,4 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
+
+from src.core.api_errors import ApplicationInconsistencyError
 from .model import UserModel
 from datetime import datetime
 from dateutil import relativedelta, parser
@@ -34,7 +36,10 @@ class UserService:
         return UserModel.query.all()
 
     def get_by_id(self, _id) -> UserModel:
-        return UserModel.query.get_or_404(_id)
+        entity = UserModel.query.get(_id)
+        if entity is None:
+            raise ApplicationInconsistencyError('institution not found')
+        return entity
 
     def find_by_rut(self, rut):
         return UserModel.query.filter(UserModel.rut == rut)

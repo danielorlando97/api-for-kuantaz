@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from .model import InstitutionModel
 from datetime import datetime
+from src.core.api_errors import ApplicationInconsistencyError
 
 
 class InstitutionService:
@@ -23,7 +24,10 @@ class InstitutionService:
         return InstitutionModel.query.all()
 
     def get_by_id(self, _id) -> InstitutionModel:
-        return InstitutionModel.query.get_or_404(_id)
+        entity = InstitutionModel.query.get(_id)
+        if entity is None:
+            raise ApplicationInconsistencyError('institution not found')
+        return entity
 
     def update(self, _id, data):
         entity = self.get_by_id(_id)

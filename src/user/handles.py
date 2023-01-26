@@ -2,7 +2,7 @@ from src import app
 from .service import UserService
 from .dtos_mapper import UserMapper
 from flask import request, Flask, jsonify
-from src.core.api_errors import InputValidationError
+from src.core.api_errors import InputValidationError, ApplicationInconsistencyError
 
 
 def build(app: Flask, service: UserService, mapper: UserMapper):
@@ -210,8 +210,10 @@ def build(app: Flask, service: UserService, mapper: UserMapper):
                          items:
                              $ref: '#/definitions/UserDetailsDto'
         """
-
-        entity = service.get_by_id(_id)
+        try:
+            entity = service.get_by_id(_id)
+        except ApplicationInconsistencyError as e:
+            return e.message, 404
         return {"message": "success", "entity": mapper.entity_to_details(entity)}
 
     @app.route('/user/<_id>', methods=['PUT'])
