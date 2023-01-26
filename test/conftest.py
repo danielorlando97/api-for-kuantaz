@@ -8,6 +8,16 @@ from src import user
 from src import db
 
 
+from src.institution.model import InstitutionModel
+import unit.institution_model_test as int_data
+
+from src.project.model import ProjectModel
+import unit.project_model_test as project_data
+
+from src.user.model import UserModel
+import unit.user_model_test as user_data
+
+
 @pytest.fixture(scope='session')
 def test_client():
 
@@ -32,3 +42,34 @@ def test_client():
 
             db.session.remove()
             db.drop_all()
+
+
+@pytest.fixture(scope='session')
+def new_institution():
+    def f():
+        return InstitutionModel(int_data.name, int_data.description, int_data.direction)
+    return f
+
+
+@pytest.fixture(scope='session')
+def new_project():
+    return ProjectModel(
+        name=project_data.name,
+        description=project_data.description,
+        start_date=project_data.start_date,
+        end_date=project_data.end_date,
+        main_user_id=-1,
+        institution_id=-1
+    )
+
+
+@pytest.fixture(scope='session')
+def new_user():
+    return UserModel(
+        name=user_data.name,
+        last_name=user_data.last_name,
+        rut=user_data.rut,
+        office=user_data.office,
+        birthday=user_data.birthday,
+        age=-1
+    )

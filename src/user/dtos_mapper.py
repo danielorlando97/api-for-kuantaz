@@ -55,7 +55,7 @@ class UserMapper:
 
     def entity_to_rut_view(self, entity: UserModel):
         schema = UserReadDto(
-            only=('id', 'name', 'last_name', 'age', 'office', 'projects'))
+            only=('id', 'name', 'last_name', 'age', 'office', 'projects', 'rut'))
         return schema.dump(entity)
 
     def entity_to_details(self, entity: UserModel):

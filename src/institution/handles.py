@@ -7,14 +7,91 @@ from src.core.api_errors import InputValidationError
 
 def build(app: Flask, service: InstitutionService, mapper: InstitutionMapper):
     @app.route('/institutions/direction', methods=['GET'])
-    def handler_direction_institution():
-        if request.method == 'GET':
-            results = service.get_all()
-            results = [mapper.entity_to_direction_view(e) for e in results]
-            return {"message": "success", "count": len(results), "data": results}
+    def institution_get_direction():
+        """
+        This the endpoint return all of institutions with a specific structure to map its direction to link
+        ---
+        tags:
+          - Institution EndPoints
+        definitions:
+            InstitutionDirectionReadDto:
+                type: object
+                properties:
+                    id:
+                        type: integer
+                    name:
+                        type: string
+                        description: It's a abbreviator of institution's name
+                    direction:
+                        type: string
+                        default: It doesnt have description yet
+                        description: It can be the default value or a link compose by https://www.google.com/maps/search/ + entity_db.direction
+        responses:
+          500:
+            description: There should be a connection database problem
+          200:
+            description: It's a success response
+            schema:
+                properties:
+                    message:
+                         type: string
+                         default: success
+                    count:
+                         type: integer
+                         description: Number of results
+                    data:
+                         type: array
+                         items:
+                             $ref: '#/definitions/InstitutionDirectionReadDto'
+        """
 
-    @app.route('/institution', methods=['POST', 'GET'])
-    def handler_institutions():
+        results = service.get_all()
+        results = [mapper.entity_to_direction_view(e) for e in results]
+        return {"message": "success", "count": len(results), "data": results}
+
+    @app.route('/institution', methods=['POST'])
+    def institution_post():
+        """
+        This the endpoint create an institution
+        ---
+        tags:
+            - Institution EndPoints
+        parameters:
+            -   name: _id
+                in: path
+                type: string
+                required: true
+            -   name: body
+                in: body
+                required: true
+                schema:
+                    id: InstitutionCreateDto
+                    required:
+                        - name
+                    properties:
+                        name:
+                            type: string
+                            description: institution's name.
+                            default: "Inti Inc."
+                        description:
+                            type: string
+                        direction:
+                            type: string
+        responses:
+          500:
+            description: There should be a connection database problem
+          400:
+            description: You should read the response, because this error can be for the type, structure or rules of endpoint's input 
+          200:
+            description: It's a success response
+            schema:
+                properties:
+                    message:
+                        type: string
+                        default: success
+                    entity_id:
+                        type: integer
+        """
         if request.method == 'POST':
             if request.is_json:
                 body = request.get_json()
@@ -34,27 +111,213 @@ def build(app: Flask, service: InstitutionService, mapper: InstitutionMapper):
             results = [mapper.entity_to_summary(e) for e in results]
             return {"message": "success", "count": len(results), "data": results}
 
-    @app.route('/institution/<_id>', methods=['GET', 'PUT', 'DELETE'])
-    def handler_institution(_id):
+    @app.route('/institution', methods=['GET'])
+    def institution_get():
+        """
+        This the endpoint return all of institutions
+        ---
+        tags:
+          - Institution EndPoints
+        definitions:
 
-        if request.method == 'GET':
-            entity = service.get_by_id(_id)
-            return {"message": "success", "entity": mapper.entity_to_details(entity)}
+            InstitutionSummaryDto:
+                type: object
+                properties:
+                    id:
+                        type: integer
+                    name:
+                        type: string
+                        description: institution's name
+                    direction:
+                        type: string
+                        default: It doesnt have description yet
+                    description:
+                        type: string
+                        default: It doesnt have description yet    
 
-        elif request.method == 'PUT':
-            if request.is_json:
-                body = request.get_json()
+        responses:
+          500:
+            description: There should be a connection database problem
+          200:
+            description: It's a success response
+            schema:
+                properties:
+                    message:
+                         type: string
+                         default: success
+                    count:
+                         type: integer
+                         description: Number of results
+                    data:
+                         type: array
+                         items:
+                             $ref: '#/definitions/InstitutionReadDto'
+        """
 
-                try:
-                    body = mapper.body_to_update_dto(body)
-                    _ = service.update(_id, body)
-                except InputValidationError as e:
-                    return jsonify(e.message), 400
+        results = service.get_all()
+        results = [mapper.entity_to_summary(e) for e in results]
+        return {"message": "success", "count": len(results), "data": results}
 
-                return {"message": "success"}
-            else:
-                return "The request payload is not in JSON format", 400
+    @app.route('/institution/<_id>', methods=['GET'])
+    def institution_get_id(_id):
+        """
+        This the endpoint return an institutions
+        ---
+        tags:
+            - Institution EndPoints
+        parameters:
+            -   name: _id
+                in: path
+                type: string
+                required: true
+        definitions:
+            InstitutionProjectReadDto:
+                type: object
+                properties:
+                    id:
+                        type: integer
+                    name:
+                        type: string
+                        description: project's name
+                    description:
+                        type: string
+                    start_date:
+                        type: date
+                        description: date when project start  
+                    end_date:
+                        type: date
+                        description: date when project end
+                    main_user:
+                        type: object
+                        properties:
+                            id:
+                                type: integer
+                            name:
+                                type: string
+                            last_name:
+                                type: string
+                            rut:
+                                type: string
+                            office:
+                                type: string
+                                description: user's company position   
+                            age:
+                                type: integer
 
-        elif request.method == 'DELETE':
-            _ = service.delete(_id)
+            InstitutionReadDto:
+                type: object
+                properties:
+                    id:
+                        type: integer
+                    name:
+                        type: string
+                        description: institution's name
+                    direction:
+                        type: string
+                        default: It doesnt have description yet
+                    description:
+                        type: string
+                        default: It doesnt have description yet    
+                    created_at:
+                        type: date
+                        description: time when entity was created  
+                    updated_at_at:
+                        type: date
+                        description: time when entity was updated
+                    projects:
+                        type: array
+                        items:
+                            $ref: '#/definitions/InstitutionProjectReadDto'
+        responses:
+          500:
+            description: There should be a connection database problem
+          200:
+            description: It's a success response
+            schema:
+                properties:
+                    message:
+                         type: string
+                         default: success
+                    entity:
+                        $ref: '#/definitions/InstitutionReadDto'
+        """
+
+        entity = service.get_by_id(_id)
+        return {"message": "success", "entity": mapper.entity_to_details(entity)}
+
+    @app.route('/institution/<_id>', methods=['PUT'])
+    def institution_put(_id):
+        """
+        This the endpoint update an institution
+        ---
+        tags:
+            - Institution EndPoints
+        parameters:
+            -   name: _id
+                in: path
+                type: string
+                required: true
+            -   name: body
+                in: body
+                required: true
+                schema:
+                    id: InstitutionUpdateDto
+                    properties:
+                        name:
+                            type: string
+                            description: institution's name.
+                            default: "Inti Inc."
+                        description:
+                            type: string
+                        direction:
+                            type: string
+        responses:
+          500:
+            description: There should be a connection database problem
+          400:
+            description: You should read the response, because this error can be for the type, structure or rules of endpoint's input 
+          200:
+            description: It's a success response
+            schema:
+                properties:
+                    message:
+                         type: string
+                         default: success
+        """
+        if request.is_json:
+            body = request.get_json()
+            try:
+                body = mapper.body_to_update_dto(body)
+                _ = service.update(_id, body)
+            except InputValidationError as e:
+                return jsonify(e.message), 400
             return {"message": "success"}
+        else:
+            return "The request payload is not in JSON format", 400
+
+    @app.route('/institution/<_id>', methods=['DELETE'])
+    def institution_delete(_id):
+        """
+        This the endpoint remove an institution
+        ---
+        tags:
+            - Institution EndPoints
+        parameters:
+            -   name: _id
+                in: path
+                type: string
+                required: true
+        responses:
+          500:
+            description: There should be a connection database problem
+          200:
+            description: It's a success response
+            schema:
+                properties:
+                    message:
+                         type: string
+                         default: success
+        """
+
+        _ = service.delete(_id)
+        return {"message": "success"}

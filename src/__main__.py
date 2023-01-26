@@ -1,5 +1,6 @@
 from src import app, db
 from flask_migrate import Migrate
+from flasgger import Swagger
 
 from . import institution as inst
 from . import project
@@ -9,8 +10,11 @@ inst.build(app, inst.InstitutionService(db), inst.InstitutionMapper())
 project.build(app, project.ProjectService(db), project.ProjectMapper())
 user.build(app, user.UserService(db), user.UserMapper())
 
+
+swagger = Swagger(app)
 db.init_app(app)
 migrate = Migrate(app, db)
+
 with app.app_context():
     db.create_all()
 app.run(debug=True)
@@ -27,7 +31,10 @@ app.run(debug=True)
 #   https://stackoverflow.com/questions/13370317/sqlalchemy-default-datetime
 #   https://docs.sqlalchemy.org/en/14/core/defaults.html
 # TODO: Read Specifications ✅✅
-# TODO: Add Swagger
+# TODO: Add Swagger  ✅✅
+#   https://flask-restplus.readthedocs.io/en/stable/quickstart.html
+#   https://github.com/flasgger/flasgger
+#   https://medium.com/analytics-vidhya/flasgger-an-api-playground-with-flask-and-swagger-ui-6b6806cf8884
 # TODO: Add UnitTest
 #   https://testdriven.io/blog/flask-pytest/
 #   https://flask.palletsprojects.com/en/2.2.x/testing/
@@ -35,3 +42,5 @@ app.run(debug=True)
 # TODO: Create Readme
 #   docker-version
 #   python-version
+#   401 para los proyectos
+#   sagger project

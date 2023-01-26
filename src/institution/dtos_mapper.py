@@ -46,7 +46,7 @@ class InstitutionReadDto(Schema):
     description = fields.Function(
         lambda obj: "It doesnt have description yet" if obj.description is None else obj.description)
     direction = fields.Function(
-        lambda obj: "It doesnt have description yet" if obj.description is None else obj.direction)
+        lambda obj: "It doesnt have direction yet" if obj.description is None else obj.direction)
     created_at = fields.DateTime()
     updated_at = fields.DateTime()
 
@@ -56,7 +56,7 @@ class InstitutionReadDto(Schema):
 class InstitutionDirectionView(Schema):
     id = fields.Integer()
     direction = fields.Function(
-        lambda obj: None if obj.direction is None else f'https://www.google.com/maps/search/{obj.direction}')
+        lambda obj: "It doesnt have direction yet" if obj.direction is None else f'https://www.google.com/maps/search/{obj.direction}')
     name = fields.Function(lambda obj: obj.name[:3].upper())
 
 
