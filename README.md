@@ -38,6 +38,7 @@ interacting with the database and the domain layer was omitted.
 
 - ✅✅ Create documentation with Swagger.
   - `/apidocs`
+- ✅✅ [Postman Collection](https://github.com/danielorlando97/api-for-kuantaz/blob/main/Api%20For%20Kuantaz.postman_collection.json)
 - ✅✅ Use ORM preferably sqlalchemy.
 - ✅✅ Unit tests
 
