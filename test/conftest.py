@@ -16,9 +16,14 @@ def test_client():
     app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://root:root@localhost:5432/flask-test"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    inst.build(app, inst.InstitutionService(db), inst.InstitutionMapper())
-    project.build(app, project.ProjectService(db), project.ProjectMapper())
-    user.build(app, user.UserService(db), user.UserMapper())
+    inst_service = inst.InstitutionService(db)
+    inst.build(app, inst_service, inst.InstitutionMapper())
+
+    user_service = user.UserService(db)
+    user.build(app, user_service, user.UserMapper())
+
+    project.build(app, project.ProjectService(
+        db, user_service, inst_service), project.ProjectMapper())
 
     db.init_app(app)
     migrate = Migrate(app, db)

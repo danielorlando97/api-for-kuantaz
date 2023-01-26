@@ -17,13 +17,13 @@ class ProjectService:
         if _id is None:
             return default
 
-        return self.user_service.get_by_id(_id)
+        return self.user_service.get_by_id(_id).id
 
     def validate_institution_selected(self, _id, default=None):
         if _id is None:
             return default
 
-        return self.institution_service.get_by_id(_id)
+        return self.institution_service.get_by_id(_id).id
 
     def create(self, data):
         new_project = ProjectModel(
