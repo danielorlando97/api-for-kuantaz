@@ -7,7 +7,7 @@ from src.user.model import UserModel
 name = 'Tomas'
 last_name = "Alasdos"
 rut = '123456789'
-birthday = datetime.now()
+birthday = "1997-04-01T00:00:00"
 office = 'developer'
 
 

@@ -16,7 +16,7 @@ class UserUpdateDto(Schema):
     name = fields.String(dump_default=None)
     last_name = fields.String(dump_default=None)
     rut = fields.String(dump_default=None)
-    birthday = fields.String(dump_default=None)
+    birthday = fields.DateTime(dump_default=None)
     office = fields.String(dump_default=None)
 
 

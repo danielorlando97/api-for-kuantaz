@@ -174,7 +174,6 @@ def build(app: Flask, service: UserService, mapper: UserMapper):
                         type: string
                     rut:
                         type: string
-                        description: This field only apparent when the query has its filter
                     office:
                         type: string
                         description: user's company position
@@ -190,7 +189,6 @@ def build(app: Flask, service: UserService, mapper: UserMapper):
                         description: time when entity was updated
                     projects:
                         type: array
-                        description: This field only apparent when the query has the rut filter
                         items:
                             $ref: '#/definitions/UserProjectReadDto'
 

@@ -10,7 +10,7 @@ start_date = datetime.now()
 end_date = datetime.now()
 
 
-def create(user_id=-1, inst_id=-1):
+def create(user_id=None, inst_id=None):
     return ProjectModel(
         name,
         description,
