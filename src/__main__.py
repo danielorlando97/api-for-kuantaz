@@ -29,6 +29,7 @@ with app.app_context():
 
 
 app.run(
+    host=environ.get('HOST', '127.0.0.1'),
     debug=environ.get("DEBUG_MODE", False),
     port=environ.get("PORT", 5000),
 )

@@ -13,6 +13,9 @@ run_test_docker: down_all
 build_db: down_all
 	docker-compose -f docker-db.yml up -d 
 
+build_db_test: down_all
+	docker-compose -f docker-db.yml up -d 
+
 run_full_stack: down_all
 	docker-compose -f docker-test.yml up 
 	docker-compose -f docker-test.yml down 
@@ -22,3 +25,4 @@ down_all:
 	docker-compose -f docker-api.yml down 
 	docker-compose -f docker-test.yml down 
 	docker-compose -f docker-db.yml down
+	docker-compose -f docker-db-test.yml down

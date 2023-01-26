@@ -17,5 +17,6 @@ RUN pip install -r requirements.txt
 COPY . /usr/src/app/
 
 EXPOSE 5000
+EXPOSE 3000
 
 CMD ["python", "-m", "src"]

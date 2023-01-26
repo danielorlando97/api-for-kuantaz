@@ -10,9 +10,9 @@ services:
     depends_on:
       - postgres
     ports:
-      - 5001:5000
-    networks:
-      - postgres
+      - 3000:3000
+    # networks:
+    #   - postgres
 
   postgres:
     image: postgres
@@ -23,9 +23,8 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_USER: root
       POSTGRES_DB: flask
-    networks:
-      - postgres
-
-networks:
-  postgres:
-    driver: bridge
+    # networks:
+    #   - postgres
+# networks:
+#   postgres:
+#     driver: bridge
