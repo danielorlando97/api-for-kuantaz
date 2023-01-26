@@ -42,7 +42,7 @@ interacting with the database and the domain layer was omitted.
 - ✅✅ Unit tests
 
 
-## Run Project
+## Run Project 🥵
 
 The best way to run the project is to execute the following line. 
 That will execute the necessary actions to run the docker 
