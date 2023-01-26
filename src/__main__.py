@@ -44,7 +44,7 @@ app.run(debug=True)
 # TODO: Add UnitTest ✅✅
 #   https://testdriven.io/blog/flask-pytest/
 #   https://flask.palletsprojects.com/en/2.2.x/testing/
-# TODO: Docker and Env
+# TODO: Docker and Env https://testdriven.io/blog/dockerizing-flask-with-postgres-gunicorn-and-nginx/
 # TODO: Create Readme
 #   docker-version
 #   python-version

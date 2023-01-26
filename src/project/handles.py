@@ -8,12 +8,117 @@ from src.core.api_errors import ApplicationInconsistencyError, InputValidationEr
 def build(app: Flask, service: ProjectService, mapper: ProjectMapper):
     @app.route('/projects/durations', methods=['GET'])
     def project_durations():
+        """
+        This the endpoint return all of projects with a specific structure 
+        ---
+        tags:
+            - Project EndPoints
+        definitions:
+            ProjectDurationReadDto:
+                type: object
+                properties:
+                    id:
+                        type: integer
+                    name:
+                        type: string
+                    days_to_release:
+                        type: integer
+                        description: Days number to the project's end 
+        responses:
+          500:
+            description: There should be a connection database problem
+          200:
+            description: It's a success response
+            schema:
+                properties:
+                    message:
+                         type: string
+                         default: success
+                    count:
+                         type: integer
+                         description: Number of results
+                    data:
+                         type: array
+                         items:
+                             $ref: '#/definitions/ProjectDurationReadDto'
+        """
+
         results = service.get_all()
         results = [mapper.entity_to_durations(e) for e in results]
         return {"message": "success", "count": len(results), "data": results}
 
     @app.route('/project', methods=['GET'])
     def project_get():
+        """
+        This the endpoint return all of projects
+        ---
+        tags:
+            - Project EndPoints
+        definitions:
+            ProjectSummaryReadDto:
+                type: object
+                properties:
+                    id:
+                        type: integer
+                    name:
+                        type: string
+                    description:
+                        type: string
+                        default: It doesnt have description yet 
+                    start_date:
+                        type: date
+                        description: date when project start  
+                    end_date:
+                        type: date
+                        description: date when project end
+                    days_to_release:
+                        type: integer
+                        description: Days number to the project's end 
+                    institution:
+                        type: object
+                        properties:
+                            id:
+                                type: integer
+                            name:
+                                type: string
+                            description:
+                                type: string
+                            direction:
+                                type: string
+                    main_user:
+                        type: object
+                        properties:
+                            id:
+                                type: integer
+                            name:
+                                type: string
+                            last_name:
+                                type: string
+                            rut:
+                                type: string
+                            office:
+                                type: string
+                                description: user's company position   
+                            age:
+                                type: integer
+        responses:
+          500:
+            description: There should be a connection database problem
+          200:
+            description: It's a success response
+            schema:
+                properties:
+                    message:
+                         type: string
+                         default: success
+                    count:
+                         type: integer
+                         description: Number of results
+                    data:
+                         type: array
+                         items:
+                             $ref: '#/definitions/InstitutionDirectionReadDto'
+        """
         results = service.get_all()
         results = [mapper.entity_to_summary(e) for e in results]
         return {"message": "success", "count": len(results), "data": results}
@@ -93,6 +198,51 @@ def build(app: Flask, service: ProjectService, mapper: ProjectMapper):
 
     @app.route('/project/<_id>', methods=['GET'])
     def project_get_id(_id):
+        """
+        This the endpoint return all of projects
+        ---
+        tags:
+            - Project EndPoints
+        definitions:
+            ProjectDetailsReadDto:
+                type: object
+                properties:
+                    id:
+                        type: integer
+                    name:
+                        type: string
+                    start_date:
+                        type: date
+                        description: date when project start  
+                    end_date:
+                        type: date
+                        description: date when project end
+                    created_at:
+                        type: date
+                        description: time when entity was created  
+                    updated_at_at:
+                        type: date
+                        description: time when entity was updated
+
+        responses:
+          500:
+            description: There should be a connection database problem
+          200:
+            description: It's a success response
+            schema:
+                properties:
+                    message:
+                         type: string
+                         default: success
+                    count:
+                         type: integer
+                         description: Number of results
+                    data:
+                         type: array
+                         items:
+                             $ref: '#/definitions/InstitutionDirectionReadDto'
+        """
+
         try:
             entity = service.get_by_id(_id)
         except ApplicationInconsistencyError as e:
