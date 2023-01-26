@@ -1,11 +1,14 @@
 from src import app, db
 from flask_migrate import Migrate
 from flasgger import Swagger
+from dotenv import load_dotenv
+from os import environ
 
 from . import institution as inst
 from . import project
 from . import user
 
+load_dotenv()
 
 inst_service = inst.InstitutionService(db)
 inst.build(app, inst_service, inst.InstitutionMapper())
@@ -23,7 +26,12 @@ migrate = Migrate(app, db)
 
 with app.app_context():
     db.create_all()
-app.run(debug=True)
+
+
+app.run(
+    debug=environ.get("DEBUG_MODE", False),
+    port=environ.get("PORT", 5000),
+)
 
 # https://stackabuse.com/using-sqlalchemy-with-flask-and-postgresql/
 # https://www.askpython.com/python-modules/flask/flask-postgresql
@@ -44,10 +52,9 @@ app.run(debug=True)
 # TODO: Add UnitTest ✅✅
 #   https://testdriven.io/blog/flask-pytest/
 #   https://flask.palletsprojects.com/en/2.2.x/testing/
-# TODO: Docker and Env https://testdriven.io/blog/dockerizing-flask-with-postgres-gunicorn-and-nginx/
+# TODO: Docker and Env ✅✅
+#   https://testdriven.io/blog/dockerizing-flask-with-postgres-gunicorn-and-nginx/
+#   https://stackoverflow.com/questions/62807717/how-can-i-solve-postgresql-scram-authentication-problem
 # TODO: Create Readme
 #   docker-version
 #   python-version
-#   401 para los proyectos
-#   sagger project
-#   test project

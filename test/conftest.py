@@ -8,12 +8,25 @@ from src import user
 from src import db
 
 
+from dotenv import load_dotenv
+from os import environ
+
+load_dotenv()
+
+
 @pytest.fixture(scope='session')
 def test_client():
 
     app = Flask("Api For Kuantaz")
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://root:root@localhost:5432/flask-test"
+    db_type = environ.get("DATABASE_TYPE")
+    db_user = environ.get("DATABASE_USER")
+    db_pass_ = environ.get("DATABASE_PASS")
+    db_host = environ.get("DATABASE_HOST")
+    db_port = environ.get("DATABASE_PORT")
+    db_name = environ.get("DATABASE_NAME_TEST")
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = f"{db_type}://{db_user}:{db_pass_}@{db_host}:{db_port}/{db_name}"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     inst_service = inst.InstitutionService(db)
